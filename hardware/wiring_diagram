@@ -1,0 +1,22 @@
+# Bed-Exit Sensor 回路図（ESP32 + HC-SR04）
+
+ESP32 (DevKit)
+┌───────────────────────────────────────┐
+│ 3V3 (3.3V)                            │
+│ VIN / 5V (USB 5V)  →  HC-SR04 VCC     │
+│ GND              ↔  HC-SR04 GND       │
+│ GPIO5 (TRIG)     →  HC-SR04 TRIG      │
+│ GPIO18 (ECHO)    ←  HC-SR04 ECHO via divider │
+└───────────────────────────────────────┘
+
+電圧分割回路（ECHO信号保護）
+HC-SR04 ECHO ── 10kΩ ──●── 20kΩ ── GND（ESP32共通）
+                          │
+                          └── GPIO18（ESP32）
+出力電圧 ≒ 3.3V（5V入力時）
+
+補足：
+- TRIGピン: ESP32 から 10µs の HIGH パルスを出力
+- ECHOピン: センサーからの反射時間をパルス幅で返す（分圧を通して安全に入力）
+- VCC: 5V 推奨（ESP32 の VIN または USB 5V）
+- GND: 共通化必須
